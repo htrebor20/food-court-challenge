@@ -1,7 +1,9 @@
 server:
-  port: 8080
+  port: 8090
 
 spring:
+  application:
+    name: msvc-food-court
   datasource:
     url: jdbc:mysql://localhost/foot_court
     username: ${username}
