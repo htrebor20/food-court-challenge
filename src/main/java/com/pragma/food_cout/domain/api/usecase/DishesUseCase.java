@@ -10,6 +10,8 @@ import com.pragma.food_cout.domain.model.Dishes;
 import com.pragma.food_cout.domain.model.Restaurant;
 import com.pragma.food_cout.domain.spi.IDishesPersistencePort;
 
+import java.util.Optional;
+
 public class DishesUseCase implements IDishesServicePort {
     private final IDishesPersistencePort dishesPersistencePort;
     private final IRestaurantServicePort restaurantServicePort;
@@ -32,6 +34,20 @@ public class DishesUseCase implements IDishesServicePort {
         return dishesPersistencePort.saveDishes(dishes);
     }
 
+    @Override
+    public Dishes update(Dishes dishes, Long id) {
+        this.validatePrice(dishes.getPrice());
+        Optional<Dishes> optionalDishes = Optional.ofNullable(dishesPersistencePort.findById(id));
+        if (optionalDishes.isEmpty()) {
+            throw new BadRequestValidationException(String.format(Constants.ID_VALIDATIONS_EXCEPTION_MESSAGE, dishes.getId()));
+        } else {
+            Dishes dishesResponse = optionalDishes.get();
+            dishesResponse.setDescription(dishes.getDescription().isEmpty() ? dishesResponse.getDescription() : dishes.getDescription());
+            dishesResponse.setPrice(dishes.getPrice() == null ? dishesResponse.getPrice() : dishes.getPrice());
+            return dishesPersistencePort.saveDishes(dishesResponse);
+        }
+    }
+
     private void validateDishes(Dishes dishes) {
         this.validateOwnerRole(dishes);
         this.validatePrice(dishes.getPrice());
@@ -44,7 +60,7 @@ public class DishesUseCase implements IDishesServicePort {
     }
 
     private void validatePrice(Integer price) {
-        if (price <= 0) {
+        if (price == null || price <= 0) {
             throw new BadRequestValidationException(Constants.PRICE_VALIDATIONS_EXCEPTION_MESSAGE);
         }
     }

@@ -20,5 +20,4 @@ public class DishesResponseDto {
     private Category category;
     boolean active;
     private Restaurant restaurant;
-    private Long ownerId;
 }
