@@ -21,9 +21,8 @@ public class DishesAdapter implements IDishesPersistencePort {
     }
 
     @Override
-    public Dishes findById(Dishes dishes) {
-        DishesEntity entity = dishesEntityMapper.toEntity(dishes);
-        Optional<DishesEntity> optionalDishes = dishesRepository.findById(entity.getId());
+    public Dishes findById(Long id) {
+        Optional<DishesEntity> optionalDishes = dishesRepository.findById(id);
         return optionalDishes.map(dishesEntityMapper::toModel).orElse(null);
     }
 }

@@ -1,6 +1,7 @@
 package com.pragma.food_cout.adapters.driving.http.mapper;
 
 import com.pragma.food_cout.adapters.driving.http.dto.request.DishesRequestDto;
+import com.pragma.food_cout.adapters.driving.http.dto.request.DishesRequestUpdateDto;
 import com.pragma.food_cout.adapters.driving.http.dto.response.DishesResponseDto;
 import com.pragma.food_cout.domain.model.Category;
 import com.pragma.food_cout.domain.model.Dishes;
@@ -16,6 +17,7 @@ public interface IDishesRequestMapper {
     @Mapping(target = "category", source = "categoryId")
     @Mapping(target = "restaurant", source = "restaurantId")
     Dishes requestToModel(DishesRequestDto dishesRequestDto);
+    Dishes requestUpdateToModel(DishesRequestUpdateDto dishesRequestDto);
 
     default Category mapCategory(Long categoryId) {
         return new Category(categoryId, null, null);
