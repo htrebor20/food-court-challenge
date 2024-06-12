@@ -8,6 +8,7 @@ import com.pragma.food_cout.domain.exception.BadRequestValidationException;
 import com.pragma.food_cout.domain.model.Restaurant;
 import com.pragma.food_cout.domain.model.User;
 import com.pragma.food_cout.domain.spi.IRestaurantPersistencePort;
+import com.pragma.food_cout.utility.CustomPage;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Objects;
@@ -24,10 +25,10 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     }
 
     @Override
-    public void saveRestaurant(Restaurant restaurant) {
+    public Restaurant saveRestaurant(Restaurant restaurant) {
         validateRestaurant(restaurant);
-        restaurantPersistencePort.saveRestaurant(restaurant);
-    }
+        return restaurantPersistencePort.saveRestaurant(restaurant);
+        }
 
     @Override
     public Restaurant findById(Long id) {
@@ -36,6 +37,11 @@ public class RestaurantUseCase implements IRestaurantServicePort {
             throw new BadRequestValidationException(String.format(Constants.ID_VALIDATIONS_EXCEPTION_MESSAGE, id));
         }
         return restaurant.get();
+    }
+
+    @Override
+    public CustomPage<Restaurant> getAll(Integer page, Integer size) {
+        return restaurantPersistencePort.getAll(page,size);
     }
 
     private void validateRestaurant(Restaurant restaurant) {
