@@ -10,6 +10,7 @@ import com.pragma.food_cout.adapters.driven.jpa.mysql.repository.ICategoryReposi
 import com.pragma.food_cout.adapters.driven.jpa.mysql.repository.IDishesRepository;
 import com.pragma.food_cout.adapters.driven.jpa.mysql.repository.IRestaurantRepository;
 import com.pragma.food_cout.configuration.client.IUserClient;
+import com.pragma.food_cout.configuration.security.jwt.JwtTokenUtil;
 import com.pragma.food_cout.domain.api.ICategoryServicePort;
 import com.pragma.food_cout.domain.api.IDishesServicePort;
 import com.pragma.food_cout.domain.api.IRestaurantServicePort;
@@ -33,6 +34,7 @@ public class BeanConfiguration {
     private final ICategoryEntityMapper categoryEntityMapper;
     private final ICategoryRepository categoryRepository;
     private final IUserClient iUserClient;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort () { return new RestaurantAdapter(restaurantRepository, restaurantEntityMapper); }

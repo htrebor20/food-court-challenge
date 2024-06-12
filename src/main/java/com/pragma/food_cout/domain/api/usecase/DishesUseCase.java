@@ -36,12 +36,13 @@ public class DishesUseCase implements IDishesServicePort {
 
     @Override
     public Dishes update(Dishes dishes, Long id) {
-        this.validatePrice(dishes.getPrice());
         Optional<Dishes> optionalDishes = Optional.ofNullable(dishesPersistencePort.findById(id));
         if (optionalDishes.isEmpty()) {
             throw new BadRequestValidationException(String.format(Constants.ID_VALIDATIONS_EXCEPTION_MESSAGE, dishes.getId()));
         } else {
             Dishes dishesResponse = optionalDishes.get();
+            dishes.setRestaurant(dishesResponse.getRestaurant());
+            validateDishes(dishes);
             dishesResponse.setDescription(dishes.getDescription().isEmpty() ? dishesResponse.getDescription() : dishes.getDescription());
             dishesResponse.setPrice(dishes.getPrice() == null ? dishesResponse.getPrice() : dishes.getPrice());
             return dishesPersistencePort.saveDishes(dishesResponse);
