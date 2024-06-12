@@ -11,6 +11,7 @@ import lombok.Setter;
 public class DishesRequestUpdateDto {
     private Integer price;
     private String description;
+    private Boolean active;
     @NotNull(message = "Owner ID is mandatory")
     private Long ownerId;
 }
