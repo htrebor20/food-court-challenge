@@ -4,6 +4,7 @@ import com.pragma.food_cout.configuration.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,9 +26,9 @@ public class SecurityConfiguration {
 
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers(HttpMethod.GET,"/restaurant/").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/restaurant/**").hasAnyRole("ADMIN")
                         .requestMatchers("/dishes/**").hasAnyRole("OWNER")
-
                         .anyRequest().authenticated())
                 .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
