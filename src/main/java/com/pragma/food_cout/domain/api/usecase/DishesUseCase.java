@@ -43,6 +43,7 @@ public class DishesUseCase implements IDishesServicePort {
             Dishes dishesResponse = optionalDishes.get();
             dishes.setRestaurant(dishesResponse.getRestaurant());
             validateDishes(dishes);
+            dishesResponse.setActive(dishes.isActive() != null ? dishes.isActive() : dishesResponse.isActive());
             dishesResponse.setDescription(dishes.getDescription().isEmpty() ? dishesResponse.getDescription() : dishes.getDescription());
             dishesResponse.setPrice(dishes.getPrice() == null ? dishesResponse.getPrice() : dishes.getPrice());
             return dishesPersistencePort.saveDishes(dishesResponse);

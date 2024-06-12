@@ -30,7 +30,6 @@ public class DishesRestController {
     @PatchMapping("/{id}")
     public ResponseEntity<DishesResponseDto> updateDish(@PathVariable(name = "id") Long id, @RequestBody DishesRequestUpdateDto request) {
         Dishes dishes = dishesRequestMapper.requestUpdateToModel(request);
-        dishesServicePort.update(dishes, id);
         Dishes savedDish =  dishesServicePort.update(dishes, id);
         DishesResponseDto response = dishesRequestMapper.toResponse(savedDish);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

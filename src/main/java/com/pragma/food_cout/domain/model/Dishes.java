@@ -7,11 +7,11 @@ public class Dishes {
     private String description;
     private String imageUrl;
     private Category category;
-    boolean active;
+    Boolean active;
     private Restaurant restaurant;
     private Long ownerId;
 
-    public Dishes(Long id, String name, Integer price, String description, String imageUrl, Category category, boolean active, Restaurant restaurant, Long ownerId) {
+    public Dishes(Long id, String name, Integer price, String description, String imageUrl, Category category, Boolean active, Restaurant restaurant, Long ownerId) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -71,11 +71,11 @@ public class Dishes {
         this.category = category;
     }
 
-    public boolean isActive() {
+    public Boolean isActive() {
         return active;
     }
 
-    public void setActive(boolean active) {
+    public void setActive(Boolean active) {
         this.active = active;
     }
 
