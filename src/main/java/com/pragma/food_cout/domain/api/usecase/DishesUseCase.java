@@ -9,6 +9,7 @@ import com.pragma.food_cout.domain.model.Category;
 import com.pragma.food_cout.domain.model.Dishes;
 import com.pragma.food_cout.domain.model.Restaurant;
 import com.pragma.food_cout.domain.spi.IDishesPersistencePort;
+import com.pragma.food_cout.utility.CustomPage;
 
 import java.util.Optional;
 
@@ -48,6 +49,11 @@ public class DishesUseCase implements IDishesServicePort {
             dishesResponse.setPrice(dishes.getPrice() == null ? dishesResponse.getPrice() : dishes.getPrice());
             return dishesPersistencePort.saveDishes(dishesResponse);
         }
+    }
+
+    @Override
+    public CustomPage<Dishes> getAll(Integer page, Integer size, Long categoryId) {
+        return dishesPersistencePort.getAll(page, size, categoryId);
     }
 
     private void validateDishes(Dishes dishes) {

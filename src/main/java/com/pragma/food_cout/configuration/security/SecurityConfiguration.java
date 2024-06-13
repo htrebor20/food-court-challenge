@@ -28,7 +28,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET,"/restaurant/").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers("/restaurant/**").hasAnyRole("ADMIN")
-                        .requestMatchers("/dishes/**").hasAnyRole("OWNER")
+                        .requestMatchers(HttpMethod.GET,"/dishes/").hasAnyRole("CUSTOMER")
                         .anyRequest().authenticated())
                 .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
