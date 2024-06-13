@@ -2,13 +2,17 @@ package com.pragma.food_cout.adapters.driving.http.mapper;
 
 import com.pragma.food_cout.adapters.driving.http.dto.request.DishesRequestDto;
 import com.pragma.food_cout.adapters.driving.http.dto.request.DishesRequestUpdateDto;
+import com.pragma.food_cout.adapters.driving.http.dto.response.CustomerDishesResponseDto;
 import com.pragma.food_cout.adapters.driving.http.dto.response.DishesResponseDto;
 import com.pragma.food_cout.domain.model.Category;
 import com.pragma.food_cout.domain.model.Dishes;
 import com.pragma.food_cout.domain.model.Restaurant;
+import com.pragma.food_cout.utility.CustomPage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+
+import java.util.List;
 
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
@@ -28,4 +32,17 @@ public interface IDishesRequestMapper {
     }
 
     DishesResponseDto toResponse(Dishes dishes);
+
+    List<CustomerDishesResponseDto> toResponseDishesList(List<Dishes> dishesCustomPage);
+
+    CustomPage<CustomerDishesResponseDto> toResponseDtoList(CustomPage<Dishes> customPage);
+    default CustomPage<CustomerDishesResponseDto> toCustomPage(CustomPage<Dishes> dishesPage) {
+        return new CustomPage<>(
+                this.toResponseDishesList(dishesPage.getContent()),
+                dishesPage.getTotalElements(),
+                dishesPage.getTotalPages(),
+                dishesPage.getNumber(),
+                dishesPage.getSize()
+        );
+    }
 }
