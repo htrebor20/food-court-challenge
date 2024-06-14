@@ -1,11 +1,13 @@
 package com.pragma.food_cout.adapters.driven.jpa.mysql.entity;
 
+import com.pragma.food_cout.utility.enums.OrderStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -13,27 +15,19 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "dishes")
-public class DishesEntity {
+@Table(name = "orders")
+public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private Integer price;
-    private String description;
-    private String imageUrl;
-    private Integer categoryId;
-    private boolean active;
-    private Integer restaurantId;
+    private Long idCustomer;
+    private LocalDate orderDate;
+    private OrderStatusEnum status;
 
-    @ManyToOne
-    @JoinColumn(name = "id_category")
-    private CategoryEntity category;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurant")
     private RestaurantEntity restaurant;
 
-    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDishEntity> orderDishes;
 }

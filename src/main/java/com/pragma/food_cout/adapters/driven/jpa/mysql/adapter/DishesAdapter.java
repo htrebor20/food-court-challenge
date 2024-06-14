@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -39,5 +40,11 @@ public class DishesAdapter implements IDishesPersistencePort {
                 dishesRepository.findByCategory_Id(categoryId, pagination) :
                 dishesRepository.findAll(pagination);
         return dishesEntityMapper.toPage(response);
+    }
+
+    @Override
+    public List<Dishes> findAllByIds(List<Long> ids) {
+        List<DishesEntity> dishes = dishesRepository.findAllById(ids);
+        return dishesEntityMapper.toDishesList(dishes);
     }
 }

@@ -1,7 +1,6 @@
 package com.pragma.food_cout.adapters.driven.jpa.mysql.mapper;
-
-import com.pragma.food_cout.adapters.driven.jpa.mysql.entity.DishesEntity;
-import com.pragma.food_cout.domain.model.Dishes;
+import com.pragma.food_cout.adapters.driven.jpa.mysql.entity.OrderEntity;
+import com.pragma.food_cout.domain.model.Order;
 import com.pragma.food_cout.utility.CustomPage;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
@@ -12,17 +11,16 @@ import java.util.List;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface IDishesEntityMapper {
+public interface IOrderEntityMapper {
+    Order toModel(OrderEntity orderEntity);
+    OrderEntity toEntity(Order order);
 
-    Dishes toModel(DishesEntity dishesEntity);
-    DishesEntity  toEntity(Dishes  dishes);
+    List<Order> toOrderList(List<OrderEntity> orderList);
 
-    List<Dishes> toDishesList(List<DishesEntity> dishesList);
-
-    CustomPage<Dishes> toPage(Page<DishesEntity> entityPage);
-    default CustomPage<Dishes> toCustomPage(Page<DishesEntity> entityPage) {
+    CustomPage<Order> toPage(Page<OrderEntity> entityPage);
+    default CustomPage<Order> toCustomPage(Page<OrderEntity> entityPage) {
         return new CustomPage<>(
-                this.toDishesList(entityPage.getContent()),
+                this.toOrderList(entityPage.getContent()),
                 entityPage.getTotalElements(),
                 entityPage.getTotalPages(),
                 entityPage.getNumber(),

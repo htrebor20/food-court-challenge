@@ -26,10 +26,11 @@ public class SecurityConfiguration {
 
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET,"/restaurant/").hasAnyRole("CUSTOMER", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/restaurant/").hasAnyRole("CUSTOMER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/order/").hasAnyRole("CUSTOMER")
                         .requestMatchers("/restaurant/**").hasAnyRole("ADMIN")
                         .requestMatchers(HttpMethod.GET,"/dishes/").hasAnyRole("CUSTOMER")
-                        .anyRequest().authenticated())
+                        .anyRequest().permitAll())
                 .sessionManagement(sessionManager -> sessionManager
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class).build();

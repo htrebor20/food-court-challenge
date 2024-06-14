@@ -11,6 +11,7 @@ import com.pragma.food_cout.domain.model.Restaurant;
 import com.pragma.food_cout.domain.spi.IDishesPersistencePort;
 import com.pragma.food_cout.utility.CustomPage;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DishesUseCase implements IDishesServicePort {
@@ -52,8 +53,18 @@ public class DishesUseCase implements IDishesServicePort {
     }
 
     @Override
+    public Dishes findById(Long id) {
+        return dishesPersistencePort.findById(id);
+    }
+
+    @Override
     public CustomPage<Dishes> getAll(Integer page, Integer size, Long categoryId) {
         return dishesPersistencePort.getAll(page, size, categoryId);
+    }
+
+    @Override
+    public List<Dishes> findAllByIds(List<Long> ids) {
+        return dishesPersistencePort.findAllByIds(ids);
     }
 
     private void validateDishes(Dishes dishes) {

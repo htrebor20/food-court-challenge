@@ -34,7 +34,7 @@ public class RestaurantUseCase implements IRestaurantServicePort {
     public Restaurant findById(Long id) {
         Optional<Restaurant> restaurant = Optional.ofNullable(restaurantPersistencePort.findById(id));
         if (restaurant.isEmpty()) {
-            throw new BadRequestValidationException(String.format(Constants.ID_VALIDATIONS_EXCEPTION_MESSAGE, id));
+            throw new BadRequestValidationException(String.format(Constants.ID_FIELD_VALIDATIONS_EXCEPTION_MESSAGE, id, "restaurant"));
         }
         return restaurant.get();
     }
