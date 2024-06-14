@@ -12,8 +12,12 @@ import com.pragma.food_cout.domain.api.IRestaurantServicePort;
 import com.pragma.food_cout.domain.exception.BadRequestValidationException;
 import com.pragma.food_cout.domain.model.*;
 import com.pragma.food_cout.domain.spi.IOrderPersistencePort;
+import com.pragma.food_cout.utility.CustomPage;
 import com.pragma.food_cout.utility.enums.OrderStatusEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.sql.Date;
 import java.util.List;
@@ -30,7 +34,6 @@ public class OrderAdapter implements IOrderPersistencePort {
 
     @Override
     public void save(Order order) {
-        validateCustomerOrder(order.getIdCustomer());
         Restaurant restaurant = restaurantServicePort.findById(order.getIdRestaurant());
         validateDishesByRestaurant(order.getDishes(), order.getIdRestaurant());
         order.setOrderDate(new Date(System.currentTimeMillis()).toLocalDate());
@@ -53,6 +56,14 @@ public class OrderAdapter implements IOrderPersistencePort {
     public List<Order> findAllByIdCustomer(Long customerId) {
         List<OrderEntity> byIdCustomer = orderRepository.findByIdCustomer(customerId);
         return orderEntityMapper.toOrderList(byIdCustomer);
+    }
+
+    @Override
+    public CustomPage<OrderWithDishes> getAllByStatus(Integer page, Integer size, String status) {
+        Pageable pagination = PageRequest.of(page, size);
+        OrderStatusEnum orderStatusEnum = OrderStatusEnum.valueOf(status.toUpperCase());
+        Page<OrderEntity> response = orderRepository.findByStatus(orderStatusEnum, pagination);
+        return orderEntityMapper.toPageOrderWithDishes(response);
     }
 
     public void validateDishesByRestaurant(List<OrderDish> dishes, Long restaurantId) {
