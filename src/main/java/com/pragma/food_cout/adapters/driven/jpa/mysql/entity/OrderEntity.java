@@ -24,7 +24,7 @@ public class OrderEntity {
     private LocalDate orderDate;
     private OrderStatusEnum status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_restaurant")
     private RestaurantEntity restaurant;
 
