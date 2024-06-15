@@ -17,11 +17,13 @@ import java.util.List;
 public interface IOrderRequestMapper {
 
     Order toModel(OrderRequestDto orderRequestDto);
+
     OrderResponseDto toResponse(Order order);
 
     List<OrderResponseDto> toResponseOrderList(List<OrderWithDishes> orderCustomPage);
 
     CustomPage<OrderResponseDto> toResponseDtoList(CustomPage<OrderWithDishes> customPage);
+
     default CustomPage<OrderResponseDto> toCustomPage(CustomPage<OrderWithDishes> orderPage) {
         return new CustomPage<>(
                 this.toResponseOrderList(orderPage.getContent()),

@@ -36,4 +36,10 @@ public class OrderRestController {
         CustomPage<OrderWithDishes> response = orderServicePort.getAllByStatus(page, size,status);
         return ResponseEntity.ok(orderRequestMapper.toResponseDtoList(response));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> assignEmployee(@PathVariable(name = "id") Long id, @RequestParam  Long idEmployee  ) {
+        orderServicePort.assignEmployee(idEmployee, id);
+        return new ResponseEntity<>("Order assign", HttpStatus.CREATED);
+    }
 }

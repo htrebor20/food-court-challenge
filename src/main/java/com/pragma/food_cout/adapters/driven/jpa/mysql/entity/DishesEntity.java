@@ -34,6 +34,6 @@ public class DishesEntity {
     @JoinColumn(name = "id_restaurant")
     private RestaurantEntity restaurant;
 
-    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL)
     private List<OrderDishEntity> orderDishes;
 }

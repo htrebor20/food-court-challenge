@@ -21,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 public class OrderAdapter implements IOrderPersistencePort {
@@ -32,8 +33,10 @@ public class OrderAdapter implements IOrderPersistencePort {
     private final IRestaurantEntityMapper restaurantEntityMapper;
     private final IOrderDishesServicePort orderDishesServicePort;
 
+
     @Override
     public void save(Order order) {
+        validateCustomerOrder(order.getIdCustomer());
         Restaurant restaurant = restaurantServicePort.findById(order.getIdRestaurant());
         validateDishesByRestaurant(order.getDishes(), order.getIdRestaurant());
         order.setOrderDate(new Date(System.currentTimeMillis()).toLocalDate());
@@ -53,9 +56,27 @@ public class OrderAdapter implements IOrderPersistencePort {
     }
 
     @Override
+    public void update(Long idEmployee, Long id) {
+        OrderEntity orderEntity = findById(id);
+        orderEntity.setAssignedEmployee(idEmployee);
+        orderEntity.setStatus(OrderStatusEnum.IN_PREPARATION);
+      orderRepository.save(orderEntity);
+    }
+
+    @Override
     public List<Order> findAllByIdCustomer(Long customerId) {
         List<OrderEntity> byIdCustomer = orderRepository.findByIdCustomer(customerId);
         return orderEntityMapper.toOrderList(byIdCustomer);
+    }
+
+    @Override
+    public OrderEntity findById(Long id) {
+        Optional<OrderEntity> optionalOrderEntity = orderRepository.findById(id);
+
+        if (optionalOrderEntity.isEmpty()) {
+            throw new BadRequestValidationException(String.format(Constants.ID_FIELD_VALIDATIONS_EXCEPTION_MESSAGE, id, "order"));
+        }
+        return optionalOrderEntity.get();
     }
 
     @Override
@@ -75,7 +96,7 @@ public class OrderAdapter implements IOrderPersistencePort {
         }
     }
 
-    public void validateCustomerOrder( Long customerId) {
+    public void validateCustomerOrder(Long customerId) {
         List<Order> byIdCustomer = findAllByIdCustomer(customerId);
         boolean allMatch = byIdCustomer.stream().allMatch(order -> order.getStatus() == OrderStatusEnum.COMPLETED);
         if (!allMatch) {

@@ -8,6 +8,10 @@ import java.util.List;
 
 public interface IOrderServicePort {
     void save(Order order);
+
     List<Order> findByIdCustomer(Long customerId);
+
     CustomPage<OrderWithDishes> getAllByStatus(Integer page, Integer size, String status);
+
+    void assignEmployee(Long idEmployee, Long id);
 }
