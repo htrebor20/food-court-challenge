@@ -27,6 +27,7 @@ public class SecurityConfiguration {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.PATCH, "/order/{id}").hasAnyRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.GET, "/restaurant/{id}").hasAnyRole("OWNER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/order/").hasAnyRole("EMPLOYEE")
                         .requestMatchers(HttpMethod.GET, "/restaurant/").hasAnyRole("CUSTOMER", "ADMIN")
                         .requestMatchers(HttpMethod.POST, "/order/").hasAnyRole("CUSTOMER")
