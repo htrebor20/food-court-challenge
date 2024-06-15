@@ -10,7 +10,6 @@ import com.pragma.food_cout.domain.model.Restaurant;
 import com.pragma.food_cout.utility.CustomPage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +35,12 @@ public class RestaurantRestController {
                                                                                       @RequestParam(defaultValue = ConstantsAdapters.DEFAULT_SIZE) Integer size) {
         CustomPage<Restaurant> response = restaurantServicePort.getAll(page, size);
         return ResponseEntity.ok(restaurantRequestMapper.toResponseDtoList(response));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RestaurantResponseDto> findRestaurantById(@PathVariable Long id) {
+        Restaurant restaurant = restaurantServicePort.findById(id);
+        RestaurantResponseDto response = restaurantRequestMapper.toResponse(restaurant);
+        return ResponseEntity.ok(response);
     }
 }

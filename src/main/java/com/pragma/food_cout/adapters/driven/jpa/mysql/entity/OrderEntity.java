@@ -21,6 +21,7 @@ public class OrderEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long idCustomer;
+    private Long assignedEmployee;
     private LocalDate orderDate;
     private OrderStatusEnum status;
 

@@ -38,23 +38,23 @@ public class DishesUseCase implements IDishesServicePort {
 
     @Override
     public Dishes update(Dishes dishes, Long id) {
-        Optional<Dishes> optionalDishes = Optional.ofNullable(dishesPersistencePort.findById(id));
-        if (optionalDishes.isEmpty()) {
-            throw new BadRequestValidationException(String.format(Constants.ID_VALIDATIONS_EXCEPTION_MESSAGE, dishes.getId()));
-        } else {
-            Dishes dishesResponse = optionalDishes.get();
-            dishes.setRestaurant(dishesResponse.getRestaurant());
-            validateDishes(dishes);
-            dishesResponse.setActive(dishes.isActive() != null ? dishes.isActive() : dishesResponse.isActive());
-            dishesResponse.setDescription(dishes.getDescription().isEmpty() ? dishesResponse.getDescription() : dishes.getDescription());
-            dishesResponse.setPrice(dishes.getPrice() == null ? dishesResponse.getPrice() : dishes.getPrice());
-            return dishesPersistencePort.saveDishes(dishesResponse);
-        }
+        Dishes dishesResponse = findById(id);
+        dishes.setRestaurant(dishesResponse.getRestaurant());
+        validateDishes(dishes);
+        dishesResponse.setActive(dishes.isActive() != null ? dishes.isActive() : dishesResponse.isActive());
+        dishesResponse.setDescription(dishes.getDescription().isEmpty() ? dishesResponse.getDescription() : dishes.getDescription());
+        dishesResponse.setPrice(dishes.getPrice() == null ? dishesResponse.getPrice() : dishes.getPrice());
+        return dishesPersistencePort.saveDishes(dishesResponse);
+
     }
 
     @Override
     public Dishes findById(Long id) {
-        return dishesPersistencePort.findById(id);
+        Optional<Dishes> dishes = Optional.ofNullable(dishesPersistencePort.findById(id));
+        if (dishes.isEmpty()) {
+            throw new BadRequestValidationException(String.format(Constants.ID_FIELD_VALIDATIONS_EXCEPTION_MESSAGE, id, "dishe"));
+        }
+        return dishes.get();
     }
 
     @Override

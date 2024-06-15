@@ -9,14 +9,16 @@ public class Order {
     private Long id;
     private Long idRestaurant;
     private Long idCustomer;
+    private Long assignedEmployee;
     private List<OrderDish> dishes;
     private LocalDate orderDate;
     private OrderStatusEnum status;
 
-    public Order(Long id, Long idRestaurant, Long idCustomer, List<OrderDish> dishes, LocalDate orderDate, OrderStatusEnum status) {
+    public Order(Long id, Long idRestaurant, Long idCustomer, Long assignedEmployee, List<OrderDish> dishes, LocalDate orderDate, OrderStatusEnum status) {
         this.id = id;
         this.idRestaurant = idRestaurant;
         this.idCustomer = idCustomer;
+        this.assignedEmployee = assignedEmployee;
         this.dishes = dishes;
         this.orderDate = orderDate;
         this.status = status;
@@ -44,6 +46,14 @@ public class Order {
 
     public void setIdCustomer(Long idCustomer) {
         this.idCustomer = idCustomer;
+    }
+
+    public Long getAssignedEmployee() {
+        return assignedEmployee;
+    }
+
+    public void setAssignedEmployee(Long assignedEmployee) {
+        this.assignedEmployee = assignedEmployee;
     }
 
     public List<OrderDish> getDishes() {

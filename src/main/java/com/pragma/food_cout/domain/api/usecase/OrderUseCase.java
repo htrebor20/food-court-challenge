@@ -29,4 +29,9 @@ public class OrderUseCase implements IOrderServicePort {
     public CustomPage<OrderWithDishes> getAllByStatus(Integer page, Integer size, String status) {
         return orderPersistencePort.getAllByStatus(page, size, status);
     }
+
+    @Override
+    public void assignEmployee(Long idEmployee, Long id) {
+       orderPersistencePort.update(idEmployee, id);
+    }
 }
