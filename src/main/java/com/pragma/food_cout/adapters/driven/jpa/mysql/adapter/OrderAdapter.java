@@ -70,13 +70,13 @@ public class OrderAdapter implements IOrderPersistencePort {
     }
 
     @Override
-    public void updateOrder(Long id) {
+    public void updateOrder(Long id, String deliveryCode) {
         OrderEntity orderEntity = findById(id);
-        orderEntity.setStatus(createState(orderEntity));
-        String deliveryCode = String.format("%06d", (int) (Math.random() * 1000000));
-        orderEntity.setDeliveryCode(deliveryCode);
+        orderEntity.setStatus(createState(orderEntity, deliveryCode));
+        String deliveryCodeGenerated = String.format("%06d", (int) (Math.random() * 1000000));
+        orderEntity.setDeliveryCode(deliveryCodeGenerated);
         OrderEntity updatedOrder = orderRepository.save(orderEntity);
-        sendSMS(updatedOrder, deliveryCode);
+        sendSMS(updatedOrder, deliveryCodeGenerated);
     }
 
     @Override
@@ -121,13 +121,19 @@ public class OrderAdapter implements IOrderPersistencePort {
         }
     }
 
-    private OrderStatusEnum createState(OrderEntity orderEntity) {
+    private OrderStatusEnum createState(OrderEntity orderEntity, String deliveryCode) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String authority = authentication.getAuthorities().iterator().next().getAuthority();
 
         if (orderEntity.getStatus() == OrderStatusEnum.IN_PREPARATION) {
             if (authority.equals("ROLE_" + RoleEnum.EMPLOYEE.getRoleName())) {
                 return OrderStatusEnum.READY;
+            } else {
+                throw new BadRequestValidationException(Constants.UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE);
+            }
+        } else if (orderEntity.getStatus() == OrderStatusEnum.READY) {
+            if (authority.equals("ROLE_" + RoleEnum.EMPLOYEE.getRoleName()) && orderEntity.getDeliveryCode().equals(deliveryCode)) {
+                return OrderStatusEnum.COMPLETED;
             } else {
                 throw new BadRequestValidationException(Constants.UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE);
             }
@@ -141,7 +147,7 @@ public class OrderAdapter implements IOrderPersistencePort {
             if (orderEntity.getStatus() == OrderStatusEnum.READY) {
                 ResponseEntity<User> userById = userClient.findUserById(orderEntity.getIdCustomer());
                 Long cellphone = Objects.requireNonNull(userById.getBody()).getCellphone();
-                String message = "Your order is ready, your security PIN is: " +deliveryCode;
+                String message = "Your order is ready, your security PIN is: " + deliveryCode;
                 SmsBody smsBody = new SmsBody(cellphone.toString(), message);
                 messagingClient.sendSms(smsBody);
             }

@@ -44,8 +44,8 @@ public class OrderRestController {
     }
 
     @PatchMapping("/update-state/{id}")
-    public ResponseEntity<String> updateOrderState(@PathVariable(name = "id") Long id  ) {
-        orderServicePort.updateOrderState(id);
+    public ResponseEntity<String> updateOrderState(@PathVariable(name = "id") Long id, @RequestParam  String deliveryCode   ) {
+        orderServicePort.updateOrderState(id, deliveryCode);
         return new ResponseEntity<>("Order updated", HttpStatus.CREATED);
     }
 }
