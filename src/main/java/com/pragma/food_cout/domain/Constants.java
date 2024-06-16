@@ -15,4 +15,6 @@ public class Constants {
     public static final String ID_FIELD_VALIDATIONS_EXCEPTION_MESSAGE = "The id %d of %s was not found";
     public static final String UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE = "The order could not be updated, please contact support.";
     public static final String SMS_EXCEPTION_MESSAGE = "There was an error sending the security PIN";
+    public static final String CANCEL_ORDER_ERROR_EXCEPTION_MESSAGE = "Sorry, your order is already being prepared and cannot be cancelled.";
+    public static final String ALREADY_CANCEL_ORDER_ERROR_EXCEPTION_MESSAGE = "The order has already been canceled.";
 }

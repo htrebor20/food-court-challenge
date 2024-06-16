@@ -72,10 +72,12 @@ public class OrderAdapter implements IOrderPersistencePort {
     @Override
     public void updateOrder(Long id, String deliveryCode) {
         OrderEntity orderEntity = findById(id);
-        orderEntity.setStatus(createState(orderEntity, deliveryCode));
-        String deliveryCodeGenerated = String.format("%06d", (int) (Math.random() * 1000000));
+        OrderStatusEnum orderStatus = generateOrderState(orderEntity, deliveryCode);
+        String deliveryCodeGenerated = orderStatus == OrderStatusEnum.READY ? String.format("%06d", (int) (Math.random() * 1000000)) : "";
+        orderEntity.setStatus(orderStatus);
         orderEntity.setDeliveryCode(deliveryCodeGenerated);
         OrderEntity updatedOrder = orderRepository.save(orderEntity);
+
         sendSMS(updatedOrder, deliveryCodeGenerated);
     }
 
@@ -121,27 +123,6 @@ public class OrderAdapter implements IOrderPersistencePort {
         }
     }
 
-    private OrderStatusEnum createState(OrderEntity orderEntity, String deliveryCode) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String authority = authentication.getAuthorities().iterator().next().getAuthority();
-
-        if (orderEntity.getStatus() == OrderStatusEnum.IN_PREPARATION) {
-            if (authority.equals("ROLE_" + RoleEnum.EMPLOYEE.getRoleName())) {
-                return OrderStatusEnum.READY;
-            } else {
-                throw new BadRequestValidationException(Constants.UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE);
-            }
-        } else if (orderEntity.getStatus() == OrderStatusEnum.READY) {
-            if (authority.equals("ROLE_" + RoleEnum.EMPLOYEE.getRoleName()) && orderEntity.getDeliveryCode().equals(deliveryCode)) {
-                return OrderStatusEnum.COMPLETED;
-            } else {
-                throw new BadRequestValidationException(Constants.UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE);
-            }
-        } else {
-            throw new BadRequestValidationException(Constants.UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE);
-        }
-    }
-
     private void sendSMS(OrderEntity orderEntity, String deliveryCode) {
         try {
             if (orderEntity.getStatus() == OrderStatusEnum.READY) {
@@ -153,6 +134,41 @@ public class OrderAdapter implements IOrderPersistencePort {
             }
         } catch (Exception e) {
             throw new BadRequestValidationException(Constants.SMS_EXCEPTION_MESSAGE);
+        }
+    }
+
+    private OrderStatusEnum generateOrderState(OrderEntity orderEntity, String deliveryCode) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String authority = authentication.getAuthorities().iterator().next().getAuthority();
+
+        if (orderEntity.getStatus() == OrderStatusEnum.CANCELED) {
+            throw new BadRequestValidationException(Constants.ALREADY_CANCEL_ORDER_ERROR_EXCEPTION_MESSAGE);
+        }
+
+        if (authority.equals("ROLE_" + RoleEnum.CUSTOMER.getRoleName())) {
+            return handleCustomerOrder(orderEntity);
+        } else {
+            return handleStaffOrder(orderEntity, deliveryCode);
+        }
+    }
+
+    private OrderStatusEnum handleCustomerOrder(OrderEntity orderEntity) {
+        if (orderEntity.getStatus() == OrderStatusEnum.PENDING) {
+            return OrderStatusEnum.CANCELED;
+        }
+        throw new BadRequestValidationException(Constants.CANCEL_ORDER_ERROR_EXCEPTION_MESSAGE);
+    }
+
+    private OrderStatusEnum handleStaffOrder(OrderEntity orderEntity, String deliveryCode) {
+        switch (orderEntity.getStatus()) {
+            case IN_PREPARATION:
+                return OrderStatusEnum.READY;
+            case READY:
+                if (orderEntity.getDeliveryCode().equals(deliveryCode)) {
+                    return OrderStatusEnum.COMPLETED;
+                }
+            default:
+                throw new BadRequestValidationException(Constants.UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE);
         }
     }
 }
