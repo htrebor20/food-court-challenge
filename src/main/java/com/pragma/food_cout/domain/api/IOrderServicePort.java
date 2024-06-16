@@ -15,5 +15,5 @@ public interface IOrderServicePort {
 
     void assignEmployee(Long idEmployee, Long id);
 
-    void updateOrderState(Long id);
+    void updateOrderState(Long id, String deliveryCode);
 }

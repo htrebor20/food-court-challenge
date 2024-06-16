@@ -18,5 +18,5 @@ public interface IOrderPersistencePort {
 
     CustomPage<OrderWithDishes> getAllByStatus(Integer page, Integer size, String status);
 
-    void updateOrder(Long id);
+    void updateOrder(Long id, String deliveryCode);
 }
