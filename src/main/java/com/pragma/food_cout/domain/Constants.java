@@ -13,4 +13,6 @@ public class Constants {
     public static final String DISHES_RESTAURANT_MATCH_EXCEPTION_MESSAGE = "All dishes must belong to the same restaurant.";
     public static final String CUSTOMER_ACTIVE_ORDER_EXCEPTION_MESSAGE = "The client has active orders.";
     public static final String ID_FIELD_VALIDATIONS_EXCEPTION_MESSAGE = "The id %d of %s was not found";
+    public static final String UPDATE_ORDER_ERROR_EXCEPTION_MESSAGE = "The order could not be updated, please contact support.";
+    public static final String SMS_EXCEPTION_MESSAGE = "There was an error sending the security PIN";
 }

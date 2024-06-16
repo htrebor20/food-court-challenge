@@ -14,4 +14,6 @@ public interface IOrderServicePort {
     CustomPage<OrderWithDishes> getAllByStatus(Integer page, Integer size, String status);
 
     void assignEmployee(Long idEmployee, Long id);
+
+    void updateOrderState(Long id);
 }

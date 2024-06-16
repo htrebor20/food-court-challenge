@@ -3,6 +3,7 @@ package com.pragma.food_cout.configuration;
 import com.pragma.food_cout.adapters.driven.jpa.mysql.adapter.*;
 import com.pragma.food_cout.adapters.driven.jpa.mysql.mapper.*;
 import com.pragma.food_cout.adapters.driven.jpa.mysql.repository.*;
+import com.pragma.food_cout.configuration.client.IMessagingClient;
 import com.pragma.food_cout.configuration.client.IUserClient;
 import com.pragma.food_cout.domain.api.*;
 import com.pragma.food_cout.domain.api.usecase.*;
@@ -25,6 +26,7 @@ public class BeanConfiguration {
     private final IOrderDishEntityMapper orderDishEntityMapper;
     private final IOrderDishRepository orderDishRepository;
     private final IUserClient userClient;
+    private final IMessagingClient messagingClient;
 
     @Bean
     public IRestaurantPersistencePort restaurantPersistencePort() {
@@ -58,7 +60,7 @@ public class BeanConfiguration {
 
     @Bean
     public IOrderPersistencePort orderPersistencePort() {
-        return new OrderAdapter(dishesServicePort(), restaurantServicePort(), userClient, orderRepository, orderEntityMapper, restaurantEntityMapper,  ordersDishesServicePort());
+        return new OrderAdapter(dishesServicePort(), restaurantServicePort(), orderRepository, orderEntityMapper, restaurantEntityMapper,  ordersDishesServicePort(), userClient, messagingClient);
     }
 
     @Bean
