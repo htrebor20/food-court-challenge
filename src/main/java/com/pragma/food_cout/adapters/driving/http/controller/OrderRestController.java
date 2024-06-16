@@ -42,4 +42,10 @@ public class OrderRestController {
         orderServicePort.assignEmployee(idEmployee, id);
         return new ResponseEntity<>("Order assign", HttpStatus.CREATED);
     }
+
+    @PatchMapping("/update-state/{id}")
+    public ResponseEntity<String> updateOrderState(@PathVariable(name = "id") Long id  ) {
+        orderServicePort.updateOrderState(id);
+        return new ResponseEntity<>("Order updated", HttpStatus.CREATED);
+    }
 }

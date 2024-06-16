@@ -34,4 +34,9 @@ public class OrderUseCase implements IOrderServicePort {
     public void assignEmployee(Long idEmployee, Long id) {
        orderPersistencePort.update(idEmployee, id);
     }
+
+    @Override
+    public void updateOrderState(Long id) {
+        orderPersistencePort.updateOrder(id);
+    }
 }

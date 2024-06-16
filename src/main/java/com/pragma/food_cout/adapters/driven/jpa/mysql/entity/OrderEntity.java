@@ -24,6 +24,7 @@ public class OrderEntity {
     private Long assignedEmployee;
     private LocalDate orderDate;
     private OrderStatusEnum status;
+    private String deliveryCode;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_restaurant")
